@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#fbf7ff">
+  <meta name="description" content="ApplyPilot helps you tailor your resume, analyze job descriptions, and organize your job search.">
+  <title>ApplyPilot — Your next chapter starts here</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <!-- Browser-side document readers. Resume files are parsed locally, not uploaded to a server. -->
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.8.0/mammoth.browser.min.js"></script>
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#" data-view-link="dashboard" aria-label="ApplyPilot home">
+        <span class="brand-mark">✦</span><span>ApplyPilot</span>
+      </a>
+      <div class="sidebar-label">WORKSPACE</div>
+      <nav class="side-nav" aria-label="Main navigation">
+        <button class="nav-link active" data-view-link="dashboard"><span>⌂</span> Overview</button>
+        <button class="nav-link" data-view-link="resume"><span>▤</span> My resume</button>
+        <button class="nav-link" data-view-link="analyzer"><span>⌕</span> Job analyzer</button>
+        <button class="nav-link" data-view-link="tracker"><span>☷</span> Applications</button>
+      </nav>
+      <div class="sidebar-tip">
+        <div class="tip-icon">☁</div>
+        <strong>One step at a time</strong>
+        <p>Your next opportunity starts with one small action.</p>
+      </div>
+      <div class="sidebar-profile">
+        <div class="avatar" id="sideAvatar">Y</div>
+        <div class="profile-label"><strong id="sideName">Your profile</strong><span>Job seeker</span></div>
+        <button class="icon-button" id="editProfileButton" aria-label="Edit profile" title="Edit profile">⚙</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow" id="todayLabel">YOUR JOB SEARCH, MADE GENTLER</p>
+          <h1 id="pageTitle">A little progress goes a long way <span class="heading-sparkle">✳</span></h1>
+        </div>
+        <button class="profile-chip" id="topProfileButton">
+          <span class="avatar small" id="topAvatar">Y</span><span id="topName">Hi there</span><span class="chevron">⌄</span>
+        </button>
+      </header>
+
+      <section class="view active" id="view-dashboard">
+        <div class="welcome-banner">
+          <div class="welcome-copy">
+            <span class="banner-kicker">YOUR NEXT CHAPTER</span>
+            <h2>Small steps.<br><span>Big possibilities.</span></h2>
+            <p>Keep your search organized, show your strengths, and find a role that feels right for you.</p>
+            <button class="button button-primary" data-view-link="analyzer">Analyze a job <span>↗</span></button>
+          </div>
+          <div class="banner-art" aria-hidden="true">
+            <div class="art-sun"></div><div class="art-blob"></div>
+            <div class="art-paper"><span>✦</span><i></i><i></i><i></i><b>YOUR<br>NEXT STEP</b></div>
+            <div class="art-star star-one">✦</div><div class="art-star star-two">✧</div>
+          </div>
+        </div>
+
+        <div class="section-heading">
+          <div><h2>Your search at a glance</h2><p>Every application is progress worth celebrating.</p></div>
+          <button class="text-button" data-view-link="tracker">View applications <span>→</span></button>
+        </div>
+        <div class="stats-grid">
+          <article class="stat-card lilac"><div class="stat-top"><span>Saved applications</span><span class="stat-icon">♡</span></div><strong id="statSaved">0</strong><small>Roles on your radar</small></article>
+          <article class="stat-card peach"><div class="stat-top"><span>In progress</span><span class="stat-icon">↗</span></div><strong id="statProgress">0</strong><small>Applications underway</small></article>
+          <article class="stat-card mint"><div class="stat-top"><span>Interviews</span><span class="stat-icon">✧</span></div><strong id="statInterviews">0</strong><small>Chances to shine</small></article>
+          <article class="stat-card butter"><div class="stat-top"><span>Offers</span><span class="stat-icon">☀</span></div><strong id="statOffers">0</strong><small>New beginnings</small></article>
+        </div>
+
+        <div class="dashboard-columns">
+          <section class="panel recent-panel">
+            <div class="panel-heading"><div><h2>Recent applications</h2><p>Your latest job-search activity.</p></div><button class="round-link" data-view-link="tracker" aria-label="View all applications">→</button></div>
+            <div id="recentApplications" class="recent-list"></div>
+          </section>
+          <section class="panel next-step-panel">
+            <div class="panel-heading"><div><h2>Your next step</h2><p>A little nudge for today.</p></div><span class="sun-icon">☼</span></div>
+            <div class="next-step-card"><div class="step-illustration">✎</div><div><strong id="nextStepTitle">Add your resume</strong><p id="nextStepText">Upload a PDF or DOCX to get started with keyword matching.</p></div></div>
+            <button class="button button-soft full-width" id="nextStepButton" data-view-link="resume">Set up my resume <span>→</span></button>
+          </section>
+        </div>
+      </section>
+
+      <section class="view" id="view-resume">
+        <div class="view-intro"><div><span class="eyebrow">YOUR STORY, IN ONE PLACE</span><h2>My resume</h2><p>Upload a PDF or Word document. We'll extract the text in your browser to help you compare it with job descriptions.</p></div><span class="intro-emoji">📄</span></div>
+        <div class="resume-layout">
+          <section class="panel upload-panel">
+            <div class="panel-heading"><div><h3>Upload your resume</h3><p>PDF or DOCX · up to 8 MB</p></div><span class="upload-symbol">↑</span></div>
+            <label class="dropzone" id="resumeDropzone" for="resumeFile">
+              <input id="resumeFile" type="file" accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+              <span class="upload-cloud">☁</span><strong>Choose a file or drop it here</strong><span class="muted">Your document stays in this browser.</span><span class="button button-outline">Browse files</span>
+            </label>
+            <p class="file-status" id="resumeFileStatus" role="status">No file selected yet.</p>
+            <div class="privacy-note"><span>♡</span><p><strong>Your privacy matters.</strong> This prototype reads the file on your device. It doesn't send your resume to ApplyPilot servers. Text you save is stored in this browser only.</p></div>
+          </section>
+          <section class="panel resume-details-panel">
+            <div class="panel-heading"><div><h3>Resume text</h3><p>Review or edit the extracted text before matching.</p></div><span class="edit-symbol">✎</span></div>
+            <textarea id="resumeText" class="large-textarea" placeholder="Upload a PDF or DOCX, or paste your resume text here…" rows="13"></textarea>
+            <div class="button-row"><button class="button button-primary" id="saveResumeButton">Save resume text</button><button class="button button-quiet" id="clearResumeButton">Clear</button></div>
+            <p class="helper-text" id="resumeSaveStatus" role="status">Resume text is saved only in this browser when you choose Save.</p>
+          </section>
+        </div>
+        <section class="panel profile-form-panel">
+          <div class="panel-heading"><div><h3>A few details about you</h3><p>Optional details personalize your dashboard. No account is created.</p></div></div>
+          <form id="profileForm" class="profile-form">
+            <label>What should we call you?<input id="profileName" name="profileName" type="text" maxlength="70" placeholder="Your name"></label>
+            <label>Target role<input id="targetRole" name="targetRole" type="text" maxlength="100" placeholder="e.g. English Annotator"></label>
+            <label>Preferred work setup<select id="workPreference" name="workPreference"><option value="">Choose one (optional)</option><option>Remote</option><option>Hybrid</option><option>On-site</option><option>Flexible</option></select></label>
+            <div class="form-actions"><button class="button button-primary" type="submit">Save my details</button><span id="profileSaveStatus" class="helper-text" role="status"></span></div>
+          </form>
+        </section>
+      </section>
+
+      <section class="view" id="view-analyzer">
+        <div class="view-intro"><div><span class="eyebrow">MAKE THE JOB DESCRIPTION WORK FOR YOU</span><h2>Job description analyzer</h2><p>Spot useful skills and keywords in a job post, then compare them with your resume.</p></div><span class="intro-emoji">🔎</span></div>
+        <section class="panel analyzer-panel">
+          <label class="field-label" for="jobTitleInput">Job title <span class="optional-label">Optional</span></label>
+          <input id="jobTitleInput" class="text-input" maxlength="140" placeholder="e.g. Recruitment English Annotator">
+          <label class="field-label spaced-label" for="jobDescriptionInput">Paste the job description</label>
+          <textarea id="jobDescriptionInput" class="large-textarea" rows="10" placeholder="Paste the responsibilities, requirements, and qualifications here…"></textarea>
+          <div class="analyzer-actions"><span class="helper-text">Your text is analyzed in your browser.</span><button class="button button-primary" id="analyzeJobButton">Analyze description <span>✦</span></button></div>
+        </section>
+        <section class="results-section" id="analyzerResults" hidden>
+          <div class="section-heading"><div><h2>Here's what stands out</h2><p>Use these insights to tailor your application honestly.</p></div><span class="result-badge">Analysis ready</span></div>
+          <div class="analysis-grid">
+            <section class="panel"><div class="panel-heading"><div><h3>Key skills & terms</h3><p>Terms repeated or commonly valued in the post.</p></div></div><div id="keywordChips" class="keyword-chips"></div></section>
+            <section class="panel"><div class="panel-heading"><div><h3>Helpful next steps</h3><p>Ways to prepare a more relevant application.</p></div></div><ul id="analysisTips" class="tips-list"></ul></section>
+          </div>
+          <section class="panel match-panel"><div class="panel-heading"><div><h3>Compare with your resume</h3><p>This is keyword coverage, not a hiring probability or assessment of your worth.</p></div></div><div id="matchSummary" class="match-summary"></div><div id="matchDetails" class="match-details"></div></section>
+        </section>
+      </section>
+
+      <section class="view" id="view-tracker">
+        <div class="view-intro tracker-intro"><div><span class="eyebrow">YOUR JOB SEARCH, IN GOOD ORDER</span><h2>Application tracker</h2><p>Keep each opportunity in one calm, organized place.</p></div><button class="button button-primary" id="addApplicationButton">＋ Add application</button></div>
+        <section class="tracker-toolbar panel">
+          <div class="search-wrap"><span>⌕</span><input id="applicationSearch" type="search" placeholder="Search company or role…" aria-label="Search applications"></div>
+          <select id="statusFilter" aria-label="Filter by status"><option value="all">All statuses</option><option>Saved</option><option>Applied</option><option>Assessment</option><option>Interview</option><option>Offer</option><option>Rejected</option><option>Withdrawn</option></select>
+        </section>
+        <section class="panel table-panel">
+          <div class="table-wrap"><table><thead><tr><th>Role & company</th><th>Status</th><th>Date</th><th>Job link</th><th><span class="sr-only">Actions</span></th></tr></thead><tbody id="applicationTableBody"></tbody></table></div>
+          <div id="emptyApplications" class="empty-state"><div class="empty-illustration">♡</div><h3>No applications just yet</h3><p>Add a role you're interested in and keep track of what happens next.</p><button class="button button-primary" id="emptyAddButton">Add your first application</button></div>
+        </section>
+      </section>
+
+      <footer class="footer"><span>Made for the next chapter <span class="footer-heart">♡</span></span><span>ApplyPilot · Early prototype</span></footer>
+    </main>
+  </div>
+
+  <nav class="mobile-nav" aria-label="Mobile navigation">
+    <button class="mobile-nav-link active" data-view-link="dashboard"><span>⌂</span><small>Home</small></button>
+    <button class="mobile-nav-link" data-view-link="resume"><span>▤</span><small>Resume</small></button>
+    <button class="mobile-nav-link" data-view-link="analyzer"><span>⌕</span><small>Analyze</small></button>
+    <button class="mobile-nav-link" data-view-link="tracker"><span>☷</span><small>Tracker</small></button>
+  </nav>
+
+  <dialog id="applicationDialog" class="modal">
+    <form id="applicationForm" method="dialog">
+      <div class="modal-heading"><div><span class="eyebrow">ONE OPPORTUNITY AT A TIME</span><h2 id="applicationDialogTitle">Add application</h2></div><button type="button" class="icon-button" id="closeApplicationDialog" aria-label="Close">✕</button></div>
+      <input type="hidden" id="applicationId">
+      <label>Job title *<input id="applicationRole" required maxlength="140" placeholder="e.g. Content Analyst"></label>
+      <label>Company *<input id="applicationCompany" required maxlength="140" placeholder="Company name"></label>
+      <div class="form-two"><label>Status<select id="applicationStatus"><option>Saved</option><option>Applied</option><option>Assessment</option><option>Interview</option><option>Offer</option><option>Rejected</option><option>Withdrawn</option></select></label><label>Date<input id="applicationDate" type="date"></label></div>
+      <label>Job posting link <input id="applicationUrl" type="url" maxlength="500" placeholder="https://…"></label>
+      <label>Notes <textarea id="applicationNotes" rows="3" maxlength="2000" placeholder="Contact, follow-up date, or anything to remember…"></textarea></label>
+      <div class="modal-actions"><button type="button" class="button button-quiet" id="cancelApplicationButton">Cancel</button><button type="submit" class="button button-primary">Save application</button></div>
+      <p id="applicationFormError" class="form-error" role="alert"></p>
+    </form>
+  </dialog>
+
+  <dialog id="onboardingDialog" class="modal onboarding-modal">
+    <form id="onboardingForm" method="dialog">
+      <div class="onboarding-art">✦</div><span class="eyebrow">WELCOME TO APPLYPILOT</span>
+      <h2>Let's make your job search feel lighter.</h2>
+      <p>First, what should we call you? You can add your resume now or do it later. This demo saves information only in this browser.</p>
+      <label>Your name<input id="onboardingName" maxlength="70" placeholder="What should we call you?"></label>
+      <label>Target role <span class="optional-label">Optional</span><input id="onboardingRole" maxlength="100" placeholder="e.g. Remote content analyst"></label>
+      <div class="modal-actions"><button class="button button-quiet" type="button" id="skipOnboarding">I'll do this later</button><button class="button button-primary" type="submit">Let's go ✦</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="confirmDialog" class="modal confirm-modal">
+    <form method="dialog"><h2 id="confirmTitle">Delete this application?</h2><p id="confirmMessage">This action cannot be undone.</p><div class="modal-actions"><button class="button button-quiet" value="cancel">Keep it</button><button class="button button-danger" id="confirmAction" value="confirm">Delete</button></div></form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
