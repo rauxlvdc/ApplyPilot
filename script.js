@@ -455,6 +455,108 @@ const supabaseClient = window.supabase.createClient(
     if ((event.ctrlKey || event.metaKey) && event.key === "Enter") renderAnalyzer();
   });
 
+  
+  // ApplyPilot account authentication
+  const authDialog = $("#authDialog");
+  const authForm = $("#authForm");
+  const authTitle = $("#authTitle");
+  const authDescription = $("#authDescription");
+  const authEmail = $("#authEmail");
+  const authPassword = $("#authPassword");
+  const authStatus = $("#authStatus");
+  const authSwitchButton = $("#authSwitchButton");
+  const authSubmitButton = $("#authSubmitButton");
+
+  let authMode = "signup";
+
+  function setAuthMode(mode) {
+    authMode = mode;
+    const isSignup = mode === "signup";
+
+    authTitle.textContent = isSignup
+      ? "Create your account"
+      : "Sign in to ApplyPilot";
+
+    authDescription.textContent = isSignup
+      ? "Sign up to start organizing your job search."
+      : "Welcome back. Sign in to continue.";
+
+    authPassword.autocomplete = isSignup
+      ? "new-password"
+      : "current-password";
+
+    authSubmitButton.textContent = isSignup
+      ? "Create account"
+      : "Sign in";
+
+    authSwitchButton.textContent = isSignup
+      ? "I already have an account"
+      : "Create a new account";
+
+    authStatus.textContent = "";
+  }
+
+  authSwitchButton.addEventListener("click", () => {
+    setAuthMode(authMode === "signup" ? "login" : "signup");
+  });
+
+  authForm.addEventListener("submit", async event => {
+    event.preventDefault();
+
+    authStatus.textContent = "Please wait…";
+    authSubmitButton.disabled = true;
+
+    try {
+      const email = authEmail.value.trim();
+      const password = authPassword.value;
+
+      const result = authMode === "signup"
+        ? await supabaseClient.auth.signUp({ email, password })
+        : await supabaseClient.auth.signInWithPassword({ email, password });
+
+      if (result.error) throw result.error;
+
+      if (authMode === "signup" && !result.data.session) {
+        authStatus.textContent =
+          "Account created. Check your email to confirm your address, then sign in.";
+        setAuthMode("login");
+        return;
+      }
+
+      authDialog.close();
+      showToast("You're signed in!");
+
+    } catch (error) {
+      authStatus.textContent =
+        error.message || "Authentication failed. Please try again.";
+    } finally {
+      authSubmitButton.disabled = false;
+    }
+  });
+
+  // Open the account dialog when the user is not signed in.
+  async function checkAuthSession() {
+    const { data, error } = await supabaseClient.auth.getSession();
+
+    if (error) {
+      console.error("Could not check the session:", error.message);
+      return;
+    }
+
+    if (!data.session) {
+      setAuthMode("signup");
+      if (!authDialog.open) authDialog.showModal();
+    }
+  }
+
+  supabaseClient.auth.onAuthStateChange((event, session) => {
+    if (session && authDialog.open) {
+      authDialog.close();
+    }
+  });
+
+  checkAuthSession();
+
   // Keep the greeting current without requiring network access.
   $("#todayLabel").textContent = new Date().toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" }).toUpperCase();
   renderProfile();
