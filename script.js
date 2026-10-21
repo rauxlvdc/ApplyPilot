@@ -1,3 +1,14 @@
+
+/* ApplyPilot — Supabase connection */
+const SUPABASE_URL = "https://wwgamfkkjiujomnvorto.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_2JdtENuR3zRSeKZxhbaRew_xC6OPepZ";
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
+
+
 (() => {
   "use strict";
 
