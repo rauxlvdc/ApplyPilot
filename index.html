@@ -190,6 +190,66 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
+<dialog id="authDialog" class="modal">
+  <form id="authForm">
+    <div class="modal-heading">
+      <div>
+        <span class="eyebrow">WELCOME TO APPLYPILOT</span>
+        <h2 id="authTitle">Create your account</h2>
+      </div>
+    </div>
+
+    <p id="authDescription">
+      Sign up to start organizing your job search.
+    </p>
+
+    <label>
+      Email address
+      <input
+        id="authEmail"
+        type="email"
+        autocomplete="email"
+        required
+        maxlength="254"
+        placeholder="you@example.com"
+      >
+    </label>
+
+    <label>
+      Password
+      <input
+        id="authPassword"
+        type="password"
+        autocomplete="new-password"
+        required
+        minlength="8"
+        maxlength="72"
+        placeholder="At least 8 characters"
+      >
+    </label>
+
+    <p id="authStatus" role="status" aria-live="polite"></p>
+
+    <div class="modal-actions">
+      <button
+        type="button"
+        class="button button-quiet"
+        id="authSwitchButton"
+      >
+        I already have an account
+      </button>
+
+      <button
+        type="submit"
+        class="button button-primary"
+        id="authSubmitButton"
+      >
+        Create account
+      </button>
+    </div>
+  </form>
+</dialog>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="script.js"></script>
 </body>
